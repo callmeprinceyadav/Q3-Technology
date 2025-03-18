@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeManagementAPI.Models
 {
@@ -21,7 +21,7 @@ namespace EmployeeManagementAPI.Models
         [Required]
         public string Position { get; set; }
 
-        [Required]
+        [Required, Range(1000, 100000)]
         public decimal Salary { get; set; }
     }
 }

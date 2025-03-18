@@ -1,5 +1,5 @@
-using EmployeeManagementAPI.Models;
-using EmployeeManagementAPI.Repositories;
+﻿using EmployeeManagementAPI.Models;
+using EmployeeManagementAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementAPI.Controllers
@@ -8,46 +8,45 @@ namespace EmployeeManagementAPI.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly IEmployeeRepository _repository;
+        private readonly IEmployeeService _employeeService;
 
-        public EmployeesController(IEmployeeRepository repository)
+        public EmployeesController(IEmployeeService employeeService)
         {
-            _repository = repository;
+            _employeeService = employeeService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllEmployees()
-        {
-            return Ok(await _repository.GetAllEmployeesAsync());
-        }
+        public async Task<IActionResult> GetAll() =>
+            Ok(await _employeeService.GetAllEmployeesAsync());
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployeeById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var employee = await _repository.GetEmployeeByIdAsync(id);
+            var employee = await _employeeService.GetEmployeeByIdAsync(id);
             if (employee == null) return NotFound();
             return Ok(employee);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddEmployee([FromBody] Employee employee)
+        public async Task<IActionResult> Create(Employee employee)
         {
-            var newEmployee = await _repository.AddEmployeeAsync(employee);
-            return CreatedAtAction(nameof(GetEmployeeById), new { id = newEmployee.Id }, newEmployee);
+            var newEmployee = await _employeeService.CreateEmployeeAsync(employee);
+            return CreatedAtAction(nameof(GetById), new { id = newEmployee.Id }, newEmployee);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployee(int id, [FromBody] Employee employee)
+        public async Task<IActionResult> Update(int id, Employee employee)
         {
-            if (id != employee.Id) return BadRequest();
-            var updatedEmployee = await _repository.UpdateEmployeeAsync(employee);
-            return Ok(updatedEmployee);
+            var updatedEmployee = await _employeeService.UpdateEmployeeAsync(id, employee);
+            if (updatedEmployee == null) return NotFound();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEmployee(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _repository.DeleteEmployeeAsync(id);
+            var success = await _employeeService.DeleteEmployeeAsync(id);
+            if (!success) return NotFound();
             return NoContent();
         }
     }

@@ -48,22 +48,22 @@ Update the **`appsettings.json`** file with your SQL Server connection string:
 
 ### 4. Run Database Migration
 ```bash
-dotnet ef migrations add InitialCreate
+Add-Migration InitialCreate
 ```
 
 Apply the migration to create the database:
 ```bash
-dotnet ef database update
+Update-Database
 ```
 
 ### 5. Run the Application
 ```bash
-dotnet run
+crtl + f5
 ```
 
 After running the command, you should see a URL similar to this:
 ```
-https://localhost:5001/swagger/index.html
+https://localhost:{PORT}/swagger/index.html
 ```
 
 ---
@@ -81,9 +81,9 @@ https://localhost:5001/swagger/index.html
 **Body Example:**
 ```json
 {
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john.doe@example.com",
+  "firstName": "Prince",
+  "lastName": "YAdav",
+  "email": "prince@example.com",
   "dateOfBirth": "1990-05-15",
   "position": "Software Engineer",
   "salary": 75000
@@ -109,11 +109,7 @@ https://localhost:5001/swagger/index.html
 ❗ **Error: Database not found**
 - Ensure the connection string in `appsettings.json` points to the correct server and database.
 
-❗ **Error: Entity Framework commands not working**
-- Run this command to install EF Core tools:
-```bash
-dotnet tool install --global dotnet-ef
-```
+
 
 ❗ **Error: Port already in use**
 - Change the port number in the `launchSettings.json` file if there's a conflict.
